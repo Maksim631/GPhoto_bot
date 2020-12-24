@@ -1,10 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
+const User = require('./db/user.schema');
 
-
-// Create a bot that uses 'polling' to fetch new updates
 const config = require('./config.js');
 const { google } = require('googleapis');
-const fs = require('fs');
 const { getFileBytes, uploadBytes, createMedia } = require('./photo');
 
 const oauth2Client = new google.auth.OAuth2(
@@ -14,20 +12,6 @@ const oauth2Client = new google.auth.OAuth2(
 )
 
 const bot = new TelegramBot(config.tgToken, { polling: true });
-let token;
-
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-    // 'msg' is the received Message from Telegram
-    // 'match' is the result of executing the regexp above on the text content
-    // of the message
-
-    const chatId = msg.chat.id;
-    const resp = match[1]; // the captured "whatever"
-
-    // send back the matched "whatever" to the chat
-    bot.sendMessage(chatId, resp);
-});
 
 bot.onText(/\/login/, (msg, match) => {
     const chatId = msg.chat.id;
@@ -41,18 +25,26 @@ bot.onText(/\/login/, (msg, match) => {
 bot.onText(/\/secret (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const secret = match[1];
-    token = (await oauth2Client.getToken(secret)).tokens.access_token;
+    const token = (await oauth2Client.getToken(secret)).tokens.access_token;
+    const user = new User();
+    user.chatId = chatId;
+    user.token = token;
+    user.save();
     bot.sendMessage(chatId, 'Token successfully added');
 })
 
 bot.on('photo', async (msg) => {
     const chatId = msg.chat.id;
-    const fileId = msg.photo[msg.photo.length - 1].file_id;
-    const { data: photoBytes } = await getFileBytes(fileId, config.tgToken);
-    const { data: inputBytes } = await uploadBytes(photoBytes, token);
-    const result = await createMedia(inputBytes, token);
-    console.log(result);
-    bot.sendMessage(chatId, 'Photo added');
+    const instance = await User.findOne({ chatId: chatId });
+    if (instance) {
+        const fileId = msg.photo[msg.photo.length - 1].file_id;
+        const { data: photoBytes } = await getFileBytes(fileId, config.tgToken);
+        const { data: inputBytes } = await uploadBytes(photoBytes, instance.token);
+        const result = await createMedia(inputBytes, instance.token);
+        bot.sendMessage(chatId, 'Photo added');
+    } else {
+        bot.sendMessage(chatId, 'Please update secret token');
+    }
 })
 
 module.exports = bot;

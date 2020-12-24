@@ -18,8 +18,10 @@
   "homepage": "https://github.com/Maksim631/GPhoto_bot#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.0",
     "express": "^4.17.1",
     "googleapis": "^66.0.0",
+    "mongoose": "^5.11.8",
     "node-telegram-bot-api": "^0.50.0",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0"
