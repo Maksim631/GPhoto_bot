@@ -4,7 +4,8 @@ const bot = require('./bot');
 const app = express();
 
 app.get('/auth/google/callback', (req, res) => {
-  res.json({ secret_code: req.query.code })
+  // { secret_code: req.query.code }
+  res.sendFile('./view/index.html', {root: __dirname });
 });
 app.listen(8080, () => {
   console.log(`App listening!`);

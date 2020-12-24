@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPhoto_bot</title>
+</head>
+
+<body>
+    <style>
+        #code {
+            font-size: 18px;
+        }
+    </style>
+
+    <div class="text-block">
+        <span>Please copy following code and past it in bot using `/secret` command</span>
+        <span id="code" style="color: red;"></span>
+    </div>
+    <div class="button-block">
+        <button onclick="copy()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                    d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+            </svg>
+        </button>
+        <span id="tooltip-success" style="display: none;">Copied!</span>
+        <span id="tooltip-failed" style="display: none;">Failure(</span>
+    </div>
+
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code');
+        const code = document.getElementById('code');
+        code.innerText = codeParam;
+        const tooltipSuccess = document.getElementById('tooltip-success');
+        const tooltipFailed = document.getElementById('tooltip-failed');
+
+        function copy() {
+            navigator.permissions.query({ name: "clipboard-write" }).then(result => {
+                if (result.state == "granted" || result.state == "prompt") {
+                    navigator.clipboard.writeText(codeParam).then(() => {
+                        tooltip.style.display = "block";
+                    }, () => {
+                        tooltipFailed.style.display = "block";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
