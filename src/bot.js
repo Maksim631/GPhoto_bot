@@ -26,11 +26,14 @@ bot.onText(/\/secret (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const secret = match[1];
     const token = (await oauth2Client.getToken(secret)).tokens.access_token;
-    const user = new User();
-    user.chatId = chatId;
-    user.token = token;
-    user.save();
+    User.findOneAndUpdate({ chatId }, { token }, { upsert: true });
     bot.sendMessage(chatId, 'Token successfully added');
+})
+
+bot.onText('/secret', (msg) => {
+    const chatId = msg.chat.id;
+    const user = User.findOne({ chatId });
+    bot.sendMessage(chatId, user ? user.token : 'There is no saved token for you. Write /login to add it');
 })
 
 bot.on('photo', async (msg) => {
