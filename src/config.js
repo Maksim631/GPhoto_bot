@@ -23,6 +23,6 @@ config.scopes = [
 // The API end point to use. Do not change.
 config.apiEndpoint = 'https://photoslibrary.googleapis.com';
 
-config.tgToken = '1305964524:AAGOwE1X8iJU9YBlMtj8NN2LTdZP382xqrw';
+config.tgToken = '1305964524:AAFMntCVn9kvzv2y5nfP8xoD6S1W0jOVA7Y';
 
 module.exports = config;
