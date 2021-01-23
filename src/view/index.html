@@ -42,7 +42,7 @@
         function copy() {
             navigator.permissions.query({ name: "clipboard-write" }).then(result => {
                 if (result.state == "granted" || result.state == "prompt") {
-                    navigator.clipboard.writeText(codeParam).then(() => {
+                    navigator.clipboard.writeText(`/secret ${codeParam}`).then(() => {
                         tooltip.style.display = "block";
                     }, () => {
                         tooltipFailed.style.display = "block";
