@@ -10,7 +10,7 @@ const oauth2Client = new google.auth.OAuth2(
     config.oAuthclientSecret,
     config.oAuthCallbackUrl
 )
-
+// я добавил
 const bot = new TelegramBot(config.tgToken, { polling: true });
 
 bot.onText(/\/login/, (msg, match) => {
