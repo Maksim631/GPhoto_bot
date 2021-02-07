@@ -11,7 +11,7 @@ async function getFileBytes(fileId, token) {
     return await axios.get(photoUrl, { responseType: 'arraybuffer' });
 }
 
-function uploadBytes(binaryData, token) {
+async function uploadBytes(binaryData, token) {
     return axios.post(`${googleUrl}/uploads`, binaryData, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -22,7 +22,7 @@ function uploadBytes(binaryData, token) {
     })
 }
 
-function createMedia(uploadToken, token) {
+async function createMedia(uploadToken, token) {
     return axios.post(`${googleUrl}/mediaItems:batchCreate`, {
         "newMediaItems": [
             {
