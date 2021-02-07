@@ -1,19 +1,20 @@
 const express = require('express');
-const bot = require('./bot');
-
+const logger = require('pino')();
 const app = express();
 const mongoose = require('mongoose');
 
+const BotClass = require('./bot');
+new BotClass(logger.child({ class: "TelegramBot" }));
+
 mongoose.connect('mongodb://mongo:27017/gphoto-bot', {
   useNewUrlParser: true
-}).then(() => console.log('DB connected'))
-  .catch(() => console.log('DB was not connected'));
+}).then(() => logger.info('Successfully connected to DB'))
+  .catch((e) => logger.error(`Error accured during connecting to Database. ${e}`));
 
 app.get('/auth/google/callback', (req, res) => {
-  // { secret_code: req.query.code }
   res.sendFile('./view/index.html', { root: __dirname });
 });
 
 app.listen(3000, () => {
-  console.log(`App listening!!!!!`);
+  logger.info('App successfully listening on port 3000');
 })
