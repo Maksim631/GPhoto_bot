@@ -1,11 +1,10 @@
-const TelegramBot = require('node-telegram-bot-api');
-const User = require('./db/user.schema');
+import TelegramBot from 'node-telegram-bot-api';
+import User from './db/user.schema.js';
+import config from './config.js';
+import { google } from 'googleapis';
+import { getFileBytes, uploadBytes, createMedia } from './photo.js';
 
-const config = require('./config.js');
-const { google } = require('googleapis');
-const { getFileBytes, uploadBytes, createMedia } = require('./photo');
-
-class Bot {
+export default class Bot {
     constructor(logger) {
         this.logger = logger;
         this.initializeBot();
@@ -84,4 +83,3 @@ class Bot {
 }
 
 
-module.exports = Bot;

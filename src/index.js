@@ -1,10 +1,12 @@
-const express = require('express');
-const logger = require('pino')();
-const app = express();
-const mongoose = require('mongoose');
+import express from 'express';
+import logger from 'pino';
+import mongoose from 'mongoose';
 
-const BotClass = require('./bot');
-new BotClass(logger.child({ class: "TelegramBot" }));
+logger = logger();
+import Bot from './bot.js';
+new Bot(logger.child({ class: "TelegramBot" }));
+
+const app = express();
 
 mongoose.connect('mongodb://mongo:27017/gphoto-bot', {
   useNewUrlParser: true

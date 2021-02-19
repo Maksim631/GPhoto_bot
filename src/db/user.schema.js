@@ -1,11 +1,9 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const User = mongoose.model('User', Schema({
+export default User = mongoose.model('User', Schema({
   chatId: String,
   token: String
 }));
 
-module.exports = User;

@@ -1,4 +1,4 @@
-const config = {};
+export default config = {};
 
 // The OAuth client ID from the Google Developers console.
 config.oAuthClientID = '127766624439-5dbt43cr0rhp5lvjq7a19btdhutd19k0.apps.googleusercontent.com';
@@ -23,6 +23,5 @@ config.scopes = [
 // The API end point to use. Do not change.
 config.apiEndpoint = 'https://photoslibrary.googleapis.com';
 
-config.tgToken = '1305964524:AAFMntCVn9kvzv2y5nfP8xoD6S1W0jOVA7Y';
+config.tgToken = '1305964524:AAHVgkCtEKnR9swVbgqyxhxb1W1yh4giuFQ';
 
-module.exports = config;
