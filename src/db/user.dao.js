@@ -1,35 +1,35 @@
 export default class UserDao {
   static async injectDB(conn) {
     if (this.users) {
-      return;
+      return
     }
     try {
-      this.users = await conn.db('gphoto-bot').collection('User');
+      this.users = await conn.db('gphoto-bot').collection('User')
     } catch (e) {
-      console.error(`Unable to establish collection handles in userDAO: ${e}`);
+      console.error(`Unable to establish collection handles in userDAO: ${e}`)
     }
   }
 
-  static async updateUser(user) {
+  static async update({ chatId, token }) {
     try {
       await this.users.updateOne(
-        { chatId: user.chatId },
-        { $set: { token: user.token } },
-        { upsert: true }
-      );
-      return true;
+        { chatId },
+        { $set: { token } },
+        { upsert: true },
+      )
+      return true
     } catch (e) {
-      console.error(`Error accured: ${e}`);
-      return false;
+      console.error(`Error accured: ${e}`)
+      return false
     }
   }
 
-  static findUser(id) {
+  static async find(id) {
     try {
-      return await this.users.findOne({ chatId: id });
+      return await this.users.findOne({ chatId: id })
     } catch (e) {
-      console.error(`Error accured: ${e}`);
-      return false;
+      console.error(`Error accured: ${e}`)
+      return false
     }
   }
 }
