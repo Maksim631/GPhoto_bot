@@ -1,20 +1,21 @@
-const express = require('express');
-const logger = require('pino')();
-const app = express();
-const mongoose = require('mongoose');
+import { MongoClient } from 'mongodb'
+import Bot from './bot/bot.js'
+import config from './config'
+import UserDao from './db/user.dao'
+import app from './server'
 
-const BotClass = require('./bot');
-new BotClass(logger.child({ class: "TelegramBot" }));
+new Bot(logger.child({ class: 'TelegramBot' }))
 
-mongoose.connect('mongodb://mongo:27017/gphoto-bot', {
-  useNewUrlParser: true
-}).then(() => logger.info('Successfully connected to DB'))
-  .catch((e) => logger.error(`Error accured during connecting to Database. ${e}`));
-
-app.get('/auth/google/callback', (req, res) => {
-  res.sendFile('./view/index.html', { root: __dirname });
-});
-
-app.listen(3000, () => {
-  logger.info('App successfully listening on port 3000');
+MongoClient.connect('mongodb://mongo:27017/gphoto-bot', {
+  useNewUrlParser: true,
 })
+  .then(async (client) => {
+    await UserDao.injectDB(client)
+    app.listen(config.port, () => {
+      console.log('App successfully listening on port 3000')
+    })
+  })
+  .catch((e) => {
+    console.error(`Error accured during connecting to Database. ${e}`)
+    process.exit(1)
+  })
