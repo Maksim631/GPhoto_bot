@@ -3,7 +3,7 @@ import UserDao from '../db/user.dao.js'
 
 export default function refreshInterval() {
     const hour = 950 * 60 * 60
-    setInterval(() => {
+    setInterval(async () => {
         console.log('Start refreshing of tokens')
         const users = await UserDao.find();
         users.forEach(user => {
