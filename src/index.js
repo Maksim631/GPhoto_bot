@@ -1,8 +1,11 @@
 import mongodb from 'mongodb'
 import isBotCreated from './bot/bot.js'
+import refreshInterval from './bot/refresh.js'
 import config from './config.js'
 import UserDao from './db/user.dao.js'
 import app from './server.js'
+
+refreshInterval();
 
 if (isBotCreated) {
   console.log('Bot successfully connected')
