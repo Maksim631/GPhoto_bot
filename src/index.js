@@ -20,7 +20,7 @@ MongoClient.connect('mongodb://mongo:27017/gphoto-bot', {
   .then(async (client) => {
     await UserDao.injectDB(client)
     app.listen(config.port, () => {
-      console.log('App successfully listening on port 3000')
+      console.log(`App successfully listening on port ${config.port}`)
     })
   })
   .catch((e) => {
