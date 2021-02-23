@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api'
 import UserDao from '../db/user.dao.js'
-import oauth2Client from './authClient'
+import oauth2Client from './authClient.js'
 import { getFileBytes, uploadBytes, createMedia } from './photo.js'
 
 const bot = new TelegramBot(config.tgToken, { polling: true })

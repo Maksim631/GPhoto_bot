@@ -1,4 +1,4 @@
-import oauth2Client from './authClient'
+import oauth2Client from './authClient.js'
 import UserDao from '../db/user.dao.js'
 
 export default function refreshInterval() {
