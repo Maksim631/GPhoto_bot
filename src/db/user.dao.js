@@ -10,11 +10,11 @@ export default class UserDao {
     }
   }
 
-  static async update({ chatId, token }) {
+  static async update({ chatId, accessToken, refreshToken }) {
     try {
       await this.users.updateOne(
         { chatId },
-        { $set: { token } },
+        { $set: { accessToken, refreshToken } },
         { upsert: true },
       )
       return true
@@ -27,6 +27,15 @@ export default class UserDao {
   static async find(id) {
     try {
       return await this.users.findOne({ chatId: id })
+    } catch (e) {
+      console.error(`Error accured: ${e}`)
+      return false
+    }
+  }
+
+  static async findAll() {
+    try {
+      return await this.users.find()
     } catch (e) {
       console.error(`Error accured: ${e}`)
       return false
