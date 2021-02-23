@@ -6,17 +6,18 @@ export default function refreshInterval() {
     setInterval(async () => {
         console.log('Start refreshing of tokens')
         const users = await UserDao.find();
-        users.forEach(user => {
-            console.log(`Refresh for ${user.chatId}`)
-            if (user.refreshToken) {
-                const res = await oauth2Client.refreshToken(user.refreshToken)
+        for (let i = 0; i < users.length; i++) {
+            console.log(`Refresh for ${users[i].chatId}`)
+            if (users[i].refreshToken) {
+                const res = await oauth2Client.refreshToken(users[i].refreshToken)
                 UserDao.update({
-                    chatId: user.chatId,
+                    chatId: users[i].chatId,
                     accessToken: res.tokens.access_token,
-                    refreshToken: user.refreshToken
+                    refreshToken: users[i].refreshToken
                 })
             }
-        })
+        }
+        
     }, hour)
     
 }
