@@ -14,7 +14,7 @@ if (isBotCreated) {
 }
 
 const { MongoClient } = mongodb
-MongoClient.connect('mongodb://mongo:27017/gphoto-bot', {
+MongoClient.connect(config.mongodb, {
   useNewUrlParser: true,
 })
   .then(async (client) => {

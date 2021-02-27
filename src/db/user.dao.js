@@ -35,7 +35,8 @@ export default class UserDao {
 
   static async findAll() {
     try {
-      return await this.users.find()
+      let cursor =  await this.users.find({})
+      return cursor.toArray();
     } catch (e) {
       console.error(`Error accured: ${e}`)
       return false

@@ -16,4 +16,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 22000
-CMD [ "node", "./src/index.js" ]
+CMD [ "npm", "start" ]
