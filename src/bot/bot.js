@@ -36,6 +36,7 @@ bot.onText(/\/login/, (msg, match) => {
     const url = oauth2Client.generateAuthUrl({
       scope: config.scopes,
       access_type: 'offline',
+      prompt: 'consent'
     })
     console.log(
       `/login bot controller on chatId: ${chatId}. Returned value ${url}`,
