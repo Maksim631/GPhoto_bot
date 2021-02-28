@@ -1,11 +1,12 @@
 import axios from 'axios'
+import config from '../config.js'
 
 const googleUrl = 'https://photoslibrary.googleapis.com/v1'
 const filePathUrlTemplate =
   'https://api.telegram.org/bot<token>/getFile?file_id=<file_id>'
 const photoUrlTemplate = 'https://api.telegram.org/file/bot<token>/<file_path>'
 
-export async function getFileBytes(fileId, token) {
+async function getFileBytes(fileId, token) {
   const filePathUrl = filePathUrlTemplate
     .replace('<token>', token)
     .replace('<file_id>', fileId)
@@ -16,7 +17,7 @@ export async function getFileBytes(fileId, token) {
   return await axios.get(photoUrl, { responseType: 'arraybuffer' })
 }
 
-export async function uploadBytes(binaryData, token) {
+async function uploadBytes(binaryData, token) {
   return axios.post(`${googleUrl}/uploads`, binaryData, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -27,13 +28,12 @@ export async function uploadBytes(binaryData, token) {
   })
 }
 
-export async function createMedia(uploadToken, token) {
+async function createMedia(uploadToken, token) {
   return axios.post(
     `${googleUrl}/mediaItems:batchCreate`,
     {
       newMediaItems: [
         {
-          description: 'item-description',
           simpleMediaItem: {
             fileName: 'filename',
             uploadToken: uploadToken,
@@ -48,4 +48,20 @@ export async function createMedia(uploadToken, token) {
       },
     },
   )
+}
+
+export default async function uploadMedia(fileId, accessToken, chatId) {
+  try {
+    const { data: mediaBytes } = await getFileBytes(fileId, config.tgToken)
+    const { data: inputBytes } = await uploadBytes(mediaBytes, accessToken)
+    const result = await createMedia(inputBytes, accessToken)
+    console.log(
+      `uploadMedia on chatId: ${chatId}. Create media result: `,
+      result,
+    )
+    return true
+  } catch (e) {
+    console.error(`uploadMedia on chatId: ${chatId}. Error accured:`, e)
+    return false
+  }
 }

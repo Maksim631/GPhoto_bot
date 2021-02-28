@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api'
 import config from '../config.js'
 import UserDao from '../db/user.dao.js'
 import oauth2Client from './authClient.js'
-import { createMedia, getFileBytes, uploadBytes } from './photo.js'
+import  uploadMedia  from './media.js'
 
 const bot = new TelegramBot(config.tgToken, { polling: true })
 const isBotCreated = bot ? true : false
@@ -36,7 +36,7 @@ bot.onText(/\/login/, (msg, match) => {
     const url = oauth2Client.generateAuthUrl({
       scope: config.scopes,
       access_type: 'offline',
-      prompt: 'consent'
+      prompt: 'consent',
     })
     console.log(
       `/login bot controller on chatId: ${chatId}. Returned value ${url}`,
@@ -104,17 +104,16 @@ bot.on('photo', async (msg) => {
       `/photo bot controller on chatId: ${chatId}. Founded user: ${instance}`,
     )
     if (instance?.accessToken) {
-      const fileId = msg.photo[msg.photo.length - 1].file_id
-      const { data: photoBytes } = await getFileBytes(fileId, config.tgToken)
-      const { data: inputBytes } = await uploadBytes(
-        photoBytes,
+      const result = await uploadMedia(
+        msg.photo[msg.photo.length - 1].file_id,
         instance.accessToken,
+        chatId,
       )
-      const result = await createMedia(inputBytes, instance.accessToken)
-      console.log(
-        `/photo bot controller on chatId: ${chatId}. Create media result: ${result}`,
-      )
-      bot.sendMessage(chatId, 'Photo added')
+      if (result) {
+        bot.sendMessage(chatId, 'Photo added')
+      } else {
+        bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
+      }
     } else {
       console.log(
         `/photo bot controller on chatId: ${chatId}. No secret token was founded`,
@@ -124,6 +123,38 @@ bot.on('photo', async (msg) => {
   } catch (e) {
     console.error(
       `/photo bot controller on chatId: ${chatId}. Error accured: ${e}`,
+    )
+    bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
+  }
+})
+
+bot.on('video', async (msg) => {
+  const chatId = msg.chat.id
+  try {
+    const instance = await UserDao.find(chatId)
+    console.log(
+      `/video bot controller on chatId: ${chatId}. Founded user: ${instance}`,
+    )
+    if (instance?.accessToken) {
+      const result = await uploadMedia(
+        msg.video.file_id,
+        instance.accessToken,
+        chatId,
+      )
+      if (result) {
+        bot.sendMessage(chatId, 'Video added')
+      } else {
+        bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
+      }
+    } else {
+      console.log(
+        `/video bot controller on chatId: ${chatId}. No secret token was founded`,
+      )
+      bot.sendMessage(chatId, 'Please update secret token')
+    }
+  } catch (e) {
+    console.error(
+      `/video bot controller on chatId: ${chatId}. Error accured: ${e}`,
     )
     bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
   }
