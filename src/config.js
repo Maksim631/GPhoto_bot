@@ -1,4 +1,4 @@
-const config = {
+const defaultConfig = {
   // The OAuth client ID from the Google Developers console.
   oAuthClientID:
     '127766624439-5dbt43cr0rhp5lvjq7a19btdhutd19k0.apps.googleusercontent.com',
@@ -11,7 +11,7 @@ const config = {
   oAuthCallbackUrl: 'https://max.andrewsha.net/auth/google/callback',
 
   mongodb: 'mongodb://mongo:27017/gphoto-bot',
-  
+
   // The scopes to request. The app requires the photoslibrary.readonly and
   // plus.me scopes.
   scopes: [
@@ -28,5 +28,14 @@ const config = {
 
   port: 22000,
 }
+
+const devConfig = {
+  ...defaultConfig,
+  oAuthCallbackUrl: 'http://127.0.0.1:22000/auth/google/callback',
+  mongodb: 'mongodb://localhost:27017/gphoto-bot',
+}
+
+const config = process.argv.includes('dev') ? devConfig : defaultConfig
+
 
 export default config
