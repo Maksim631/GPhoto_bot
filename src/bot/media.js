@@ -17,7 +17,7 @@ async function getFileBytes(fileId, token) {
   return await axios.get(photoUrl, { responseType: 'arraybuffer' })
 }
 
-async function uploadBytes(binaryData, token) {
+async function uploadPhotoBytes(binaryData, token) {
   return axios.post(`${googleUrl}/uploads`, binaryData, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -25,6 +25,21 @@ async function uploadBytes(binaryData, token) {
       'X-Goog-Upload-Content-Type': 'image/png',
       'X-Goog-Upload-Protocol': 'raw',
     },
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+  })
+}
+
+async function uploadVideoBytes(binaryData, token) {
+  return axios.post(`${googleUrl}/uploads`, binaryData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-type': 'application/octet-stream',
+      'X-Goog-Upload-Content-Type': 'video/mp4',
+      'X-Goog-Upload-Protocol': 'raw',
+    },
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
   })
 }
 
@@ -50,10 +65,20 @@ async function createMedia(uploadToken, token) {
   )
 }
 
-export default async function uploadMedia(fileId, accessToken, chatId) {
+export default async function uploadMedia(fileId, accessToken, type, chatId) {
   try {
     const { data: mediaBytes } = await getFileBytes(fileId, config.tgToken)
-    const { data: inputBytes } = await uploadBytes(mediaBytes, accessToken)
+    let inputBytes
+    switch (type) {
+      case 'video': {
+        inputBytes = (await uploadVideoBytes(mediaBytes, accessToken)).data
+        break
+      }
+      case 'photo': {
+        inputBytes = (await uploadPhotoBytes(mediaBytes, accessToken)).data
+        break
+      }
+    }
     const result = await createMedia(inputBytes, accessToken)
     console.log(
       `uploadMedia on chatId: ${chatId}. Create media result: `,

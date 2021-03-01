@@ -107,6 +107,7 @@ bot.on('photo', async (msg) => {
       const result = await uploadMedia(
         msg.photo[msg.photo.length - 1].file_id,
         instance.accessToken,
+        'photo',
         chatId,
       )
       if (result) {
@@ -139,6 +140,7 @@ bot.on('video', async (msg) => {
       const result = await uploadMedia(
         msg.video.file_id,
         instance.accessToken,
+        'video',
         chatId,
       )
       if (result) {
