@@ -2,9 +2,10 @@ import TelegramBot from 'node-telegram-bot-api'
 import config from '../config.js'
 import UserDao from '../db/user.dao.js'
 import oauth2Client from './authClient.js'
-import  uploadMedia  from './media.js'
+import uploadMedia from './media.js'
 
-const bot = new TelegramBot(config.tgToken, { polling: true })
+console.log('bot', process.env.TELEGRAM_TOKEN);
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true })
 const isBotCreated = bot ? true : false
 export default isBotCreated
 
@@ -113,7 +114,10 @@ bot.on('photo', async (msg) => {
       if (result) {
         bot.sendMessage(chatId, 'Photo added')
       } else {
-        bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
+        bot.sendMessage(
+          chatId,
+          'Some error accured. Please contact with developer',
+        )
       }
     } else {
       console.log(
@@ -146,7 +150,10 @@ bot.on('video', async (msg) => {
       if (result) {
         bot.sendMessage(chatId, 'Video added')
       } else {
-        bot.sendMessage(chatId, 'Some error accured. Please contact with developer')
+        bot.sendMessage(
+          chatId,
+          'Some error accured. Please contact with developer',
+        )
       }
     } else {
       console.log(
