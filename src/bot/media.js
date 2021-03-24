@@ -1,5 +1,4 @@
 import axios from 'axios'
-import config from '../config.js'
 
 const googleUrl = 'https://photoslibrary.googleapis.com/v1'
 const filePathUrlTemplate =
@@ -67,7 +66,7 @@ async function createMedia(uploadToken, token) {
 
 export default async function uploadMedia(fileId, accessToken, type, chatId) {
   try {
-    const { data: mediaBytes } = await getFileBytes(fileId, config.tgToken)
+    const { data: mediaBytes } = await getFileBytes(fileId, proces.env.TELEGRAM_TOKEN)
     let inputBytes
     switch (type) {
       case 'video': {
