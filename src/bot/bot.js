@@ -4,7 +4,6 @@ import UserDao from '../db/user.dao.js'
 import oauth2Client from './authClient.js'
 import uploadMedia from './media.js'
 
-console.log('bot', process.env.TELEGRAM_TOKEN);
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true })
 const isBotCreated = bot ? true : false
 export default isBotCreated
