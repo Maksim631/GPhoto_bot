@@ -80,9 +80,7 @@ export default async function uploadMedia(fileId, accessToken, type, chatId) {
     }
     const result = await createMedia(inputBytes, accessToken)
     console.log(
-      `uploadMedia on chatId: ${chatId}. Create media result: `,
-      result,
-    )
+      `uploadMedia on chatId: ${chatId}.`)
     return true
   } catch (e) {
     console.error(`uploadMedia on chatId: ${chatId}. Error accured:`, e)

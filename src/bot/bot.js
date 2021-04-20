@@ -5,8 +5,12 @@ import oauth2Client from './authClient.js'
 import uploadMedia from './media.js'
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true })
-const isBotCreated = bot ? true : false
-export default isBotCreated
+
+export const isBotCreated = bot ? true : false
+
+export async function closeConnection() {
+  await bot.closeWebHook()
+}
 
 bot.onText(/\/revoke/, async (msg) => {
   const chatId = msg.chat.id
