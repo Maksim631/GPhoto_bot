@@ -11,8 +11,6 @@ import {
 import UserDao from './db/user.dao.js'
 import app from './server.js'
 
-refreshInterval()
-
 if (isBotCreated) {
   console.log('Bot successfully connected')
 } else {
@@ -22,6 +20,7 @@ if (isBotCreated) {
 async function initialize() {
   const client = await getConnection()
   await UserDao.injectDB(client)
+  refreshInterval()
   return app.listen(config.port, () => {
     console.log(`App successfully listening on port ${config.port}`)
   })
@@ -40,10 +39,3 @@ try {
   console.error(`Error accured during connecting to Database. ${e}`)
   process.exit(1)
 }
-
-// process.on('exit', () => {
-//   console.log('Stopping application')
-//   closeConnection()
-// })
-
-// process.on('SIGTERM', () => console.log('Stopping application2'))
