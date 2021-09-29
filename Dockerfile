@@ -17,4 +17,4 @@ RUN npm install pm2 -g
 COPY . .
 
 EXPOSE 22000
-CMD [ "pm2-runtime", "npm", "--", "start" ]
+CMD [ "pm2-runtime", "--format", "ecosystem.config.cjs" ]
