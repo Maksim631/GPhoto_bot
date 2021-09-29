@@ -2,7 +2,7 @@ version: "2"
 services:
   gphoto_bot:
     container_name: gphoto_bot
-    restart: always
+    restart: on-failure
     build: .
     ports:
       - "22000:22000"
