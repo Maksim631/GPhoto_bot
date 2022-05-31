@@ -7,9 +7,13 @@ services:
     ports:
       - "22000:22000"
     links:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
+      - db
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: admin
+      POSTGRES_DB: gphoto
     ports:
       - "27018:27017"

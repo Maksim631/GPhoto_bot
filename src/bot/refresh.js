@@ -1,11 +1,11 @@
 import oauth2Client from './authClient.js'
-import UserDao from '../db/user.dao.js'
+import { findAll } from '../db/db.js'
 
 export default function refreshInterval() {
   const hour = 900 * 60 * 60
   setInterval(async () => {
     console.log('Start refreshing of tokens')
-    const users = await UserDao.findAll()
+    const users = await findAll()
     for (let i = 0; i < users.length; i++) {
       console.log(`Refresh for ${users[i].chatId}`)
       if (users[i].refreshToken) {

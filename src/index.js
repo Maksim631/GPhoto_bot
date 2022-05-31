@@ -4,11 +4,7 @@ import {
 } from './bot/bot.js'
 import refreshInterval from './bot/refresh.js'
 import config from './config.js'
-import {
-  getConnection,
-  closeConnection as dbCloseConnection,
-} from './db/connection.js'
-import UserDao from './db/user.dao.js'
+import { disconnect as dbDisconnect } from './db/db.js'
 import app from './server.js'
 
 refreshInterval()
@@ -20,8 +16,6 @@ if (isBotCreated) {
 }
 
 async function initialize() {
-  const client = await getConnection()
-  await UserDao.injectDB(client)
   return app.listen(config.port, () => {
     console.log(`App successfully listening on port ${config.port}`)
   })
@@ -32,7 +26,7 @@ try {
   process.on('SIGINT', async () => {
     console.log('Stopping application1')
     await botCloseConnection()
-    await dbCloseConnection()
+    await dbDisconnect()
     server.close()
     process.exit(0)
   })

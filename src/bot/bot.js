@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api'
 import config from '../config.js'
-import UserDao from '../db/user.dao.js'
+import { find, update } from '../db/db.js'
 import oauth2Client from './authClient.js'
 import uploadMedia from './media.js'
 
@@ -15,7 +15,7 @@ export async function closeConnection() {
 bot.onText(/\/revoke/, async (msg) => {
   const chatId = msg.chat.id
   try {
-    const user = await UserDao.find(chatId)
+    const user = await find(chatId)
     const res = await oauth2Client.revokeToken(user.accessToken)
     if (res.status === 200) {
       bot.sendMessage(chatId, 'Token has been successfully revoked')
@@ -61,7 +61,7 @@ bot.onText(/\/secret (.+)/, async (msg, match) => {
     const { access_token, refresh_token } = (
       await oauth2Client.getToken(secret)
     ).tokens
-    await UserDao.update({
+    await update({
       chatId,
       accessToken: access_token,
       refreshToken: refresh_token,
@@ -81,7 +81,7 @@ bot.onText(/\/secret (.+)/, async (msg, match) => {
 bot.onText(/\/check/, async (msg) => {
   const chatId = msg.chat.id
   try {
-    const user = await UserDao.find(chatId)
+    const user = await find(chatId)
     console.log(
       `/check bot controller on chatId: ${chatId}. Founded user:`,
       user,
@@ -103,7 +103,7 @@ bot.onText(/\/check/, async (msg) => {
 bot.on('photo', async (msg) => {
   const chatId = msg.chat.id
   try {
-    const instance = await UserDao.find(chatId)
+    const instance = await find(chatId)
     console.log(
       `/photo bot controller on chatId: ${chatId}. Founded user: ${instance}`,
     )
@@ -139,7 +139,7 @@ bot.on('photo', async (msg) => {
 bot.on('video', async (msg) => {
   const chatId = msg.chat.id
   try {
-    const instance = await UserDao.find(chatId)
+    const instance = await find(chatId)
     console.log(
       `/video bot controller on chatId: ${chatId}. Founded user: ${instance}`,
     )
