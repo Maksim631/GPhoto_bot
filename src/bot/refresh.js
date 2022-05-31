@@ -10,7 +10,7 @@ export default function refreshInterval() {
       console.log(`Refresh for ${users[i].chatId}`)
       if (users[i].refreshToken) {
         const res = await oauth2Client.refreshToken(users[i].refreshToken)
-        UserDao.update({
+        update({
           chatId: users[i].chatId,
           accessToken: res.tokens.access_token,
           refreshToken: users[i].refreshToken,

@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api'
 import config from '../config.js'
-import { find, update } from '../db/db.js'
+import { find, findAll, update } from '../db/db.js'
 import oauth2Client from './authClient.js'
 import uploadMedia from './media.js'
 
@@ -12,6 +12,17 @@ export async function closeConnection() {
   await bot.closeWebHook()
 }
 
+bot.onText(/\/test/, async (msg) => {
+  const chatId = msg.chat.id
+
+  try {
+    const users = await findAll()
+    bot.sendMessage(chatId, `Users length ${users.length}`)
+  } catch (e) {
+    console.error(bot.sendMessage(chatId, `/ Error accured: ${e}`))
+  }
+})
+
 bot.onText(/\/revoke/, async (msg) => {
   const chatId = msg.chat.id
   try {
@@ -19,7 +30,7 @@ bot.onText(/\/revoke/, async (msg) => {
     const res = await oauth2Client.revokeToken(user.accessToken)
     if (res.status === 200) {
       bot.sendMessage(chatId, 'Token has been successfully revoked')
-      await UserDao.update({ chatId, accessToken: null, refreshToken: null })
+      await update({ chatId, accessToken: null, refreshToken: null })
     } else {
       console.error(`Error accured on /revoke method for chatId ${chatId}`, res)
       bot.sendMessage(
