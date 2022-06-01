@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   chatId       Int    @id
   accessToken  String
   refreshToken String

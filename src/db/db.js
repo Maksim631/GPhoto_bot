@@ -3,7 +3,7 @@ const prisma = new PrismaClient()
 
 export const update = async ({ chatId, accessToken, refreshToken }) => {
   try {
-    await prisma.user.upsert({
+    await prisma.users.upsert({
       where: {
         chatId,
       },
@@ -26,7 +26,7 @@ export const update = async ({ chatId, accessToken, refreshToken }) => {
 
 export const find = async (id) => {
   try {
-    return await prisma.user.findUnique({
+    return await prisma.users.findUnique({
       where: {
         chatId: id,
       },
@@ -39,7 +39,7 @@ export const find = async (id) => {
 
 export const findAll = async () => {
   try {
-    return await prisma.user.findMany()
+    return await prisma.users.findMany()
   } catch (e) {
     console.error(`Error accured: ${e}`)
     return false

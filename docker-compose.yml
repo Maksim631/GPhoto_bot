@@ -2,18 +2,24 @@ version: "2"
 services:
   gphoto_bot:
     container_name: gphoto_bot
+    build:
+      context: .
+      dockerfile: Dockerfile.gphoto
     restart: on-failure
-    build: .
     ports:
       - "22000:22000"
     links:
-      - db
-  db:
+      - postgres
+  postgres:
     container_name: postgres
-    image: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_PASSWORD: example
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_DB: gphoto
     ports:
-      - "27018:27017"
+      - "27018:5432"
