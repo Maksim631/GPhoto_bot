@@ -1,13 +1,20 @@
-import express from 'express'
 import path from 'path'
+import http from 'http'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
-const app = express()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-app.get('/auth/google/callback', (req, res) => {
-  res.sendFile('./view/index.html', { root: __dirname })
-})
+const viewHtml = fs.readFileSync(__dirname + '/view/index.html')
 
-export default app
+export const server = http.createServer()
+
+server.on('request', (req, res) => {
+  const { url } = req
+  if (url.match('/auth/google/callback')) {
+    res.writeHeader(200, { 'Content-Type': 'text/html' })
+    res.write(viewHtml)
+    res.end()
+  }
+})

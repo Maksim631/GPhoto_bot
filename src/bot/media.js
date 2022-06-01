@@ -66,7 +66,10 @@ async function createMedia(uploadToken, token) {
 
 export default async function uploadMedia(fileId, accessToken, type, chatId) {
   try {
-    const { data: mediaBytes } = await getFileBytes(fileId, process.env.TELEGRAM_TOKEN)
+    const { data: mediaBytes } = await getFileBytes(
+      fileId,
+      process.env.TELEGRAM_TOKEN,
+    )
     let inputBytes
     switch (type) {
       case 'video': {
@@ -79,8 +82,7 @@ export default async function uploadMedia(fileId, accessToken, type, chatId) {
       }
     }
     const result = await createMedia(inputBytes, accessToken)
-    console.log(
-      `uploadMedia on chatId: ${chatId}.`)
+    console.log(`uploadMedia on chatId: ${chatId}.`)
     return true
   } catch (e) {
     console.error(`uploadMedia on chatId: ${chatId}. Error accured:`, e)
