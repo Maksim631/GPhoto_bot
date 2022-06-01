@@ -15,7 +15,7 @@ if (isBotCreated) {
   console.log("Bot couldn't connect")
 }
 
-server.listen(config.port, process.env.HOST_URL, () => {
+server.listen(config.port, () => {
   console.log(`App successfully listening on port ${config.port}`)
 })
 
