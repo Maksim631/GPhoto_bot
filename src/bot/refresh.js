@@ -1,5 +1,5 @@
 import oauth2Client from './authClient.js'
-import { findAll } from '../db/db.js'
+import { findAll, update } from '../db/db.js'
 
 export default function refreshInterval() {
   const hour = 900 * 60 * 60
